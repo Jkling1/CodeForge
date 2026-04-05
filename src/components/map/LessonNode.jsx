@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useGame } from '../../contexts/GameContext';
 import { isLockedOut } from '../../utils/hearts';
+import NoHeartsModal from '../ui/NoHeartsModal';
 
 const typeIcons = {
   concept: '{ }',
@@ -14,13 +16,19 @@ export default function LessonNode({ lesson, index, total, completed, perfect, i
   const { state, dispatch } = useGame();
   const isBoss = lesson.type === 'boss';
   const hearts = state.user.hearts;
-  const locked = isLocked || (isLockedOut(hearts) && !completed);
+  const noHearts = isLockedOut(hearts) && !completed;
+  const locked = isLocked || noHearts;
+  const [showNoHearts, setShowNoHearts] = useState(false);
 
   // Alternate left-right positioning
   const offset = index % 2 === 0 ? -40 : 40;
 
   function handleClick() {
-    if (locked) return;
+    if (isLocked) return;
+    if (noHearts) {
+      setShowNoHearts(true);
+      return;
+    }
     dispatch({ type: 'START_LESSON', lessonId: lesson.id });
   }
 
@@ -43,24 +51,25 @@ export default function LessonNode({ lesson, index, total, completed, perfect, i
   }
 
   return (
-    <div className="flex flex-col items-center" style={{ transform: `translateX(${locked ? 0 : offset}px)` }}>
+    <div className="flex flex-col items-center" style={{ transform: `translateX(${locked && !noHearts ? 0 : offset}px)` }}>
       <button
         onClick={handleClick}
-        disabled={locked}
+        disabled={isLocked}
         className={`${size} ${shape} border-2 flex items-center justify-center transition-all duration-300 relative ${
-          isAvailable ? 'animate-pulse-glow cursor-pointer hover:scale-110' :
+          isAvailable && !noHearts ? 'animate-pulse-glow cursor-pointer hover:scale-110' :
           completed ? 'cursor-pointer hover:scale-105' :
+          noHearts && !isLocked ? 'cursor-pointer opacity-60 hover:scale-105' :
           'cursor-not-allowed'
         }`}
         style={{
           background: bgColor,
-          borderColor,
+          borderColor: noHearts && !isLocked ? '#f87171' : borderColor,
           '--glow-color': worldTheme.glow,
         }}
-        title={locked ? '🔒 Locked' : lesson.title}
+        title={isLocked ? '🔒 Locked' : noHearts ? '💔 No hearts' : lesson.title}
       >
         <span className={`text-xs font-bold ${isBoss ? '-rotate-45' : ''}`} style={{ color: textColor }}>
-          {locked ? '🔒' : completed ? '✓' : typeIcons[lesson.type] || (index + 1)}
+          {isLocked ? '🔒' : noHearts && !completed ? '💔' : completed ? '✓' : typeIcons[lesson.type] || (index + 1)}
         </span>
 
         {perfect && (
@@ -73,6 +82,8 @@ export default function LessonNode({ lesson, index, total, completed, perfect, i
           {lesson.title}
         </span>
       )}
+
+      {showNoHearts && <NoHeartsModal onClose={() => setShowNoHearts(false)} />}
     </div>
   );
 }

@@ -40,6 +40,22 @@ export default function PracticeScreen() {
     <div className="h-full overflow-y-auto p-4 space-y-4">
       <h1 className="text-2xl font-bold text-slate-100">Practice</h1>
 
+      {/* Hearts recovery banner */}
+      {state.user.hearts.current < 5 && completedLessons.length > 0 && (
+        <div className="bg-danger/10 border border-danger/30 rounded-xl p-3 flex items-center gap-3">
+          <span className="text-2xl">💔</span>
+          <div className="flex-1">
+            <p className="text-sm text-slate-200 font-medium">Low on hearts!</p>
+            <p className="text-xs text-slate-400">Complete any review lesson below to earn +1 ♥</p>
+          </div>
+          <div className="flex gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span key={i} className={`text-sm ${i < state.user.hearts.current ? 'text-danger' : 'text-slate-600'}`}>♥</span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Daily Challenge */}
       {dailyChallenge ? (
         <button

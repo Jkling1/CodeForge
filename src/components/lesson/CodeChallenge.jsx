@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CodeEditor from '../editor/CodeEditor';
+import HTMLPreview from '../editor/HTMLPreview';
 import Terminal from '../editor/Terminal';
 import HintSystem from './HintSystem';
 import { executeCode, validateOutput, validateHTML } from '../../utils/sandbox';
@@ -8,6 +9,8 @@ export default function CodeChallenge({ lesson, onComplete, onWrong, hintsUsed, 
   const [code, setCode] = useState(lesson.starterCode || '');
   const [output, setOutput] = useState(null);
   const [ran, setRan] = useState(false);
+
+  const isHTML = lesson.validation?.type === 'html' || lesson.language === 'html' || lesson.language === 'css';
 
   function handleRun() {
     const validation = lesson.validation || {};
@@ -59,6 +62,11 @@ export default function CodeChallenge({ lesson, onComplete, onWrong, hintsUsed, 
         onChange={setCode}
         language={lesson.language || 'javascript'}
       />
+
+      {/* HTML Live Preview */}
+      {isHTML && code.trim().length > 0 && (
+        <HTMLPreview code={code} />
+      )}
 
       {/* Terminal Output */}
       {output && (

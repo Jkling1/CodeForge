@@ -12,9 +12,9 @@ export default function MapScreen() {
     if (currentRef.current && scrollRef.current) {
       setTimeout(() => {
         currentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 300);
+      }, 100);
     }
-  }, []);
+  }, [state.progress.currentWorld, state.progress.completedLessons.length]);
 
   const currentWorldIndex = worlds.findIndex(w => w.id === state.progress.currentWorld);
 
