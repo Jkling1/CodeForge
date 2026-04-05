@@ -3,6 +3,7 @@ import { useGame } from '../../contexts/GameContext';
 const tabs = [
   { id: 'map', label: 'Map', icon: '🗺️' },
   { id: 'practice', label: 'Practice', icon: '🎯' },
+  { id: 'leaderboard', label: 'Ranks', icon: '🏆' },
   { id: 'stats', label: 'Stats', icon: '📊' },
   { id: 'profile', label: 'Profile', icon: '👤' },
 ];

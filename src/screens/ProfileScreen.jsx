@@ -3,6 +3,8 @@ import { useGame } from '../contexts/GameContext';
 import { getLevelTitle, getLevelColor, getXPProgress } from '../utils/xp';
 import { achievements, rarityColors } from '../data/achievements';
 import { exportState, clearState } from '../utils/storage';
+import { isLoggedIn, logout, saveProgress, loadProgress } from '../utils/api';
+import AuthScreen from './AuthScreen';
 
 export default function ProfileScreen() {
   const { state, dispatch } = useGame();
@@ -11,6 +13,9 @@ export default function ProfileScreen() {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(user.name);
   const [showResetConfirm, setShowResetConfirm] = useState(0);
+  const [showAuth, setShowAuth] = useState(false);
+  const [syncStatus, setSyncStatus] = useState('');
+  const loggedIn = isLoggedIn();
 
   function handleSaveName() {
     if (nameInput.trim()) {
@@ -108,6 +113,62 @@ export default function ProfileScreen() {
           })}
         </div>
       </div>
+
+      {/* Account */}
+      <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 space-y-3">
+        <h2 className="text-lg font-bold text-slate-100">Account</h2>
+        {loggedIn ? (
+          <>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-success font-medium">✓ Signed in</p>
+                <p className="text-xs text-slate-400">Progress syncs automatically</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    setSyncStatus('syncing');
+                    try { await saveProgress(state); setSyncStatus('synced'); }
+                    catch { setSyncStatus('error'); }
+                    setTimeout(() => setSyncStatus(''), 2000);
+                  }}
+                  className="px-3 py-1.5 bg-slate-700 text-slate-300 rounded-lg text-xs hover:bg-slate-600"
+                >
+                  {syncStatus === 'syncing' ? '⟳' : syncStatus === 'synced' ? '✓ Synced' : syncStatus === 'error' ? '✗ Error' : '↑ Sync Now'}
+                </button>
+                <button
+                  onClick={() => { logout(); window.location.reload(); }}
+                  className="px-3 py-1.5 bg-slate-700 text-danger rounded-lg text-xs hover:bg-slate-600"
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div>
+            <p className="text-sm text-slate-400 mb-2">Sign in to sync progress across devices and appear on the leaderboard.</p>
+            <button
+              onClick={() => setShowAuth(true)}
+              className="w-full py-2 bg-primary/20 text-primary rounded-lg text-sm font-bold hover:bg-primary/30 transition-colors"
+            >
+              Sign In / Create Account
+            </button>
+          </div>
+        )}
+      </div>
+
+      {showAuth && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center">
+          <div className="relative w-full max-w-sm mx-4">
+            <button onClick={() => setShowAuth(false)} className="absolute -top-10 right-0 text-slate-400 hover:text-white text-lg">✕ Close</button>
+            <AuthScreen
+              onAuth={() => { setShowAuth(false); setSyncStatus('synced'); }}
+              onSkip={() => setShowAuth(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Settings */}
       <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 space-y-3">

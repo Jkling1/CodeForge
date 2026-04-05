@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useGame } from '../../contexts/GameContext';
+import { askTutor, isLoggedIn } from '../../utils/api';
 
 // Smart offline analysis — compares user code to solution and gives targeted hints
 function analyzeCode(userCode, lesson) {
@@ -139,17 +140,27 @@ export default function AITutor({ lesson, userCode, isOpen, onClose }) {
     setInput('');
     setMessages(prev => [...prev, { role: 'user', text: question }]);
 
-    if (apiKey) {
+    // Try: 1) Server proxy (if logged in), 2) Client API key, 3) Smart analysis
+    const useAI = apiKey || isLoggedIn();
+    if (useAI) {
       setLoading(true);
       try {
-        const reply = await askClaude(userCode, lesson, apiKey, question);
+        let reply;
+        if (isLoggedIn()) {
+          // Server-side proxy — no API key needed from user
+          const data = await askTutor(userCode, lesson.title, lesson.instruction, question);
+          reply = data.message;
+        } else {
+          reply = await askClaude(userCode, lesson, apiKey, question);
+        }
         setMessages(prev => [...prev, { role: 'tutor', text: reply, type: 'ai' }]);
-      } catch {
-        setMessages(prev => [...prev, { role: 'tutor', text: 'Could not reach Claude API. Check your API key in Settings.', type: 'error' }]);
+      } catch (err) {
+        // Fall back to smart analysis if AI fails
+        const tips = analyzeCode(userCode, lesson);
+        setMessages(prev => [...prev, ...tips.map(t => ({ role: 'tutor', text: t.message, type: t.type }))]);
       }
       setLoading(false);
     } else {
-      // Fallback to smart analysis
       const tips = analyzeCode(userCode, lesson);
       setMessages(prev => [...prev, ...tips.map(t => ({ role: 'tutor', text: t.message, type: t.type }))]);
     }
@@ -170,7 +181,7 @@ export default function AITutor({ lesson, userCode, isOpen, onClose }) {
             <div>
               <h3 className="text-sm font-bold text-slate-100">AI Tutor</h3>
               <span className="text-xs text-slate-500">
-                {apiKey ? '✨ Claude-powered' : '💡 Smart analysis'}
+                {apiKey || isLoggedIn() ? '✨ Claude-powered' : '💡 Smart analysis'}
               </span>
             </div>
           </div>
