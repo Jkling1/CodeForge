@@ -38,6 +38,15 @@ export default function WorldSection({ world, worldIndex, isCompleted, isCurrent
         )}
       </div>
 
+      {/* Completion badge */}
+      {isCompleted && (
+        <div className="text-center mb-2">
+          <span className="text-xs bg-success/20 text-success px-2 py-0.5 rounded-full font-bold">
+            ✓ Complete
+          </span>
+        </div>
+      )}
+
       {/* Lesson Nodes */}
       <div className="flex flex-col items-center gap-3">
         {lessons.map((lesson, idx) => {

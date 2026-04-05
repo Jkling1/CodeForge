@@ -14,19 +14,24 @@ export default function BottomNav() {
   if (current === 'lesson') return null;
 
   return (
-    <div className="flex items-center justify-around bg-slate-800 border-t border-slate-700 py-2 shrink-0">
+    <div className="flex items-center justify-around bg-slate-800/95 backdrop-blur-sm border-t border-slate-700 py-1.5 shrink-0 no-select">
       {tabs.map(tab => {
         const active = current === tab.id;
         return (
           <button
             key={tab.id}
             onClick={() => navigate(tab.id)}
-            className={`flex flex-col items-center gap-0.5 px-4 py-1 rounded-lg transition-colors ${
-              active ? 'text-primary' : 'text-slate-400 hover:text-slate-300'
+            className={`relative flex flex-col items-center gap-0.5 px-5 py-1.5 rounded-xl transition-all duration-200 ${
+              active
+                ? 'text-primary bg-primary/10 scale-105'
+                : 'text-slate-500 hover:text-slate-300 active:scale-95'
             }`}
           >
-            <span className="text-xl">{tab.icon}</span>
-            <span className="text-xs font-medium">{tab.label}</span>
+            <span className={`text-xl transition-transform ${active ? 'scale-110' : ''}`}>{tab.icon}</span>
+            <span className={`text-xs font-medium ${active ? 'text-primary' : ''}`}>{tab.label}</span>
+            {active && (
+              <div className="absolute -bottom-1.5 w-4 h-0.5 bg-primary rounded-full" />
+            )}
           </button>
         );
       })}

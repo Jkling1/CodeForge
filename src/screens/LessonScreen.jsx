@@ -7,6 +7,7 @@ import CodeChallenge from '../components/lesson/CodeChallenge';
 import PromptChallenge from '../components/lesson/PromptChallenge';
 import CodeReview from '../components/lesson/CodeReview';
 import DebugMission from '../components/lesson/DebugMission';
+import BuildProject from '../components/lesson/BuildProject';
 import BossFight from '../components/lesson/BossFight';
 
 export default function LessonScreen() {
@@ -92,7 +93,7 @@ export default function LessonScreen() {
         {lesson.type === 'prompt' && <PromptChallenge {...lessonProps} />}
         {lesson.type === 'review' && <CodeReview {...lessonProps} />}
         {lesson.type === 'debug' && <DebugMission {...lessonProps} />}
-        {lesson.type === 'project' && <CodeChallenge {...lessonProps} />}
+        {lesson.type === 'project' && <BuildProject {...lessonProps} />}
         {lesson.type === 'boss' && <BossFight {...lessonProps} />}
       </div>
     </div>

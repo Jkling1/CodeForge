@@ -20,11 +20,13 @@ function AppContent() {
 
   return (
     <Layout>
-      {screen === 'map' && <MapScreen />}
-      {screen === 'lesson' && <LessonScreen />}
-      {screen === 'practice' && <PracticeScreen />}
-      {screen === 'stats' && <StatsScreen />}
-      {screen === 'profile' && <ProfileScreen />}
+      <div key={screen} className={screen !== 'lesson' ? 'screen-transition' : ''}>
+        {screen === 'map' && <MapScreen />}
+        {screen === 'lesson' && <LessonScreen />}
+        {screen === 'practice' && <PracticeScreen />}
+        {screen === 'stats' && <StatsScreen />}
+        {screen === 'profile' && <ProfileScreen />}
+      </div>
       <XPPopup />
       {state.ui.showLevelUp && <LevelUpModal />}
       {state.achievements.pending.length > 0 && <AchievementPopup />}
