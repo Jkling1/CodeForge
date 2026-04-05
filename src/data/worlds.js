@@ -1,0 +1,86 @@
+export const worlds = [
+  {
+    id: 'world1',
+    name: 'The Command Line',
+    description: 'Terminal basics, navigating your system, what Claude Code even is',
+    icon: '>_',
+    theme: { bg: '#0a1a0a', accent: '#4ade80', glow: '#22c55e' },
+    flavor: 'You have opened the terminal for the first time. The cursor blinks. This is where everything begins.',
+  },
+  {
+    id: 'world2',
+    name: 'First Builds',
+    description: 'HTML & CSS fundamentals, building pages with Claude Code',
+    icon: '</>',
+    theme: { bg: '#0a1525', accent: '#60a5fa', glow: '#3b82f6' },
+    flavor: 'HTML is the skeleton. CSS is the skin. You are learning to build what people see.',
+  },
+  {
+    id: 'world3',
+    name: 'Making It Move',
+    description: 'JavaScript fundamentals, interactivity, DOM manipulation',
+    icon: '⚡',
+    theme: { bg: '#1a1a05', accent: '#facc15', glow: '#eab308' },
+    flavor: 'JavaScript is the nervous system. It makes things respond, react, change.',
+  },
+  {
+    id: 'world4',
+    name: 'The Prompt Lab',
+    description: 'Mastering how to talk to Claude Code — prompt engineering for developers',
+    icon: '🧪',
+    theme: { bg: '#150a20', accent: '#c084fc', glow: '#a855f7' },
+    flavor: 'Claude Code is your most powerful tool — but only if you learn to speak its language.',
+  },
+  {
+    id: 'world5',
+    name: 'Python Path',
+    description: 'Python fundamentals, scripting, automation, building CLI tools',
+    icon: '🐍',
+    theme: { bg: '#0a1510', accent: '#86efac', glow: '#4ade80' },
+    flavor: 'Python is elegant, readable, and incredibly versatile.',
+  },
+  {
+    id: 'world6',
+    name: 'Project Workshop',
+    description: 'Building complete mini-projects with Claude Code',
+    icon: '🔧',
+    theme: { bg: '#1a1208', accent: '#fb923c', glow: '#f97316' },
+    flavor: 'Theory is over. Now you build. Games, tools, utilities — small but complete.',
+  },
+  {
+    id: 'world7',
+    name: 'Data & APIs',
+    description: 'Working with data, APIs, JSON, databases, backend concepts',
+    icon: '🌊',
+    theme: { bg: '#051525', accent: '#22d3ee', glow: '#06b6d4' },
+    flavor: 'Data flows through every application like water. APIs are the pipes.',
+  },
+  {
+    id: 'world8',
+    name: 'Framework Frontier',
+    description: 'React basics, Ruby on Rails introduction, framework thinking',
+    icon: '🏗️',
+    theme: { bg: '#1a0f05', accent: '#f97316', glow: '#ea580c' },
+    flavor: 'Frameworks are power tools. The frontier is where you learn to build big.',
+  },
+  {
+    id: 'world9',
+    name: 'The Full Stack',
+    description: 'Combining frontend, backend, database — building complete apps',
+    icon: '🏛️',
+    theme: { bg: '#0f0f1a', accent: '#818cf8', glow: '#6366f1' },
+    flavor: 'Frontend. Backend. Database. Deployment. When you can build all the layers, you can build anything.',
+  },
+  {
+    id: 'world10',
+    name: 'The Forge',
+    description: 'Capstone projects, portfolio assembly, advanced Claude Code workflows',
+    icon: '🔥',
+    theme: { bg: '#1a0a00', accent: '#fbbf24', glow: '#f59e0b' },
+    flavor: 'Everything you have learned. Every language. Every tool. Now forge something real.',
+  },
+];
+
+export function getWorld(worldId) {
+  return worlds.find(w => w.id === worldId);
+}
