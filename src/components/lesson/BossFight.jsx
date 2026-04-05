@@ -18,7 +18,7 @@ export default function BossFight({ lesson, onComplete, onWrong, hintsUsed, onUs
   const phase = phases[currentPhase];
   if (!phase) return null;
 
-  const progress = ((currentPhase) / phases.length) * 100;
+  const progress = ((currentPhase + 1) / phases.length) * 100;
 
   function handlePhaseComplete(result) {
     const scores = [...phaseScores, result.score || 100];

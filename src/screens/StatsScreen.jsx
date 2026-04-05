@@ -31,11 +31,14 @@ export default function StatsScreen() {
     { name: 'Ruby', key: 'ruby', color: '#f87171' },
   ];
 
-  // Accuracy
-  const totalAttempts = Object.values(progress.lessonAttempts).reduce((a, b) => a + b, 0);
-  const accuracy = progress.completedLessons.length > 0 && totalAttempts > 0
-    ? Math.round((progress.completedLessons.length / (progress.completedLessons.length + totalAttempts)) * 100)
+  // Accuracy: percentage of lessons completed on first try (0 wrong attempts)
+  const firstTryCount = progress.completedLessons.filter(id => !(progress.lessonAttempts[id] > 0)).length;
+  const accuracy = progress.completedLessons.length > 0
+    ? Math.round((firstTryCount / progress.completedLessons.length) * 100)
     : 100;
+
+  // Concept proficiency
+  const conceptEntries = Object.entries(progress.conceptProficiency);
 
   return (
     <div className="h-full overflow-y-auto p-4 space-y-4">
@@ -142,6 +145,39 @@ export default function StatsScreen() {
         </div>
         <div className="text-xs text-slate-400 mt-1">{progress.worldsCompleted}/10</div>
       </div>
+
+      {/* Concept Proficiency Grid */}
+      {conceptEntries.length > 0 && (
+        <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+          <h3 className="text-sm font-bold text-slate-300 mb-3">Concept Mastery</h3>
+          <div className="flex flex-wrap gap-1.5">
+            {conceptEntries.map(([concept, level]) => {
+              const colors = ['bg-slate-600', 'bg-danger/60', 'bg-warning/60', 'bg-success/60'];
+              const labels = ['Seen', 'Practiced', 'Familiar', 'Mastered'];
+              return (
+                <span
+                  key={concept}
+                  className={`text-xs px-2 py-1 rounded ${colors[Math.min(level, 3)]}`}
+                  title={`${concept}: ${labels[Math.min(level, 3)]}`}
+                >
+                  {concept.replace(/-/g, ' ')}
+                </span>
+              );
+            })}
+          </div>
+          <div className="flex gap-3 mt-2">
+            {['Seen', 'Practiced', 'Familiar', 'Mastered'].map((label, i) => {
+              const colors = ['bg-slate-600', 'bg-danger/60', 'bg-warning/60', 'bg-success/60'];
+              return (
+                <div key={label} className="flex items-center gap-1">
+                  <div className={`w-2 h-2 rounded ${colors[i]}`} />
+                  <span className="text-xs text-slate-500">{label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

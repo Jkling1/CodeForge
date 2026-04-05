@@ -104,14 +104,24 @@ export default function PromptChallenge({ lesson, onComplete, onWrong, hintsUsed
       <HintSystem hints={lesson.hints} hintsUsed={hintsUsed} onUseHint={onUseHint} />
 
       {/* Buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3 flex-wrap">
         {!submitted || (result && result.overall < 50) ? (
-          <button
-            onClick={handleSend}
-            className="px-6 py-3 bg-boss text-white rounded-lg font-bold hover:bg-boss-dark transition-colors"
-          >
-            Send to Claude Code →
-          </button>
+          <>
+            <button
+              onClick={handleSend}
+              className="px-6 py-3 bg-boss text-white rounded-lg font-bold hover:bg-boss-dark transition-colors"
+            >
+              {submitted ? 'Retry →' : 'Send to Claude Code →'}
+            </button>
+            {submitted && result && result.overall < 50 && (
+              <button
+                onClick={() => { setPrompt(''); setResult(null); setSubmitted(false); }}
+                className="px-4 py-3 bg-slate-700 text-slate-300 rounded-lg font-medium hover:bg-slate-600 transition-colors"
+              >
+                Clear & Start Over
+              </button>
+            )}
+          </>
         ) : null}
 
         {result && result.overall >= 50 && (

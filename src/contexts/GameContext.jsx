@@ -15,6 +15,7 @@ const initialState = {
     streak: { current: 0, best: 0, lastActiveDate: null, freezesAvailable: 0 },
     hearts: { current: 5, maxHearts: 5, lastRegenTime: Date.now(), lastResetDate: new Date().toISOString().slice(0, 10) },
     settings: { soundEnabled: true, darkMode: true },
+    onboarded: false,
   },
   progress: {
     completedLessons: [],
@@ -241,6 +242,9 @@ function gameReducer(state, action) {
 
     case 'UPDATE_NAME':
       return { ...state, user: { ...state.user, name: action.name } };
+
+    case 'COMPLETE_ONBOARDING':
+      return { ...state, user: { ...state.user, onboarded: true }, ui: { ...state.ui, screen: 'map' } };
 
     case 'RESET_PROGRESS':
       return { ...initialState, ui: state.ui };

@@ -1,8 +1,11 @@
 import { useGame } from '../../contexts/GameContext';
+import { getNextLesson } from '../../data/lessons/index';
 
 export default function LessonComplete({ lesson, score, hintsUsed }) {
   const { dispatch } = useGame();
   const isPerfect = hintsUsed === 0 && (!score || score.score === undefined || score.score >= 90);
+  const nextLesson = getNextLesson(lesson.id);
+  const isSameWorld = nextLesson && nextLesson.worldId === lesson.worldId;
 
   return (
     <div className="h-full flex items-center justify-center p-6 bg-slate-900">
@@ -70,12 +73,26 @@ export default function LessonComplete({ lesson, score, hintsUsed }) {
           </div>
         )}
 
-        <button
-          onClick={() => dispatch({ type: 'NAVIGATE', screen: 'map' })}
-          className="px-8 py-3 bg-primary text-slate-900 rounded-lg font-bold text-lg hover:bg-primary-dark transition-colors"
-        >
-          Continue
-        </button>
+        <div className="flex flex-col gap-3">
+          {nextLesson && isSameWorld && (
+            <button
+              onClick={() => dispatch({ type: 'START_LESSON', lessonId: nextLesson.id })}
+              className="px-8 py-3 bg-primary text-slate-900 rounded-lg font-bold text-lg hover:bg-primary-dark transition-colors"
+            >
+              Next Lesson →
+            </button>
+          )}
+          <button
+            onClick={() => dispatch({ type: 'NAVIGATE', screen: 'map' })}
+            className={`px-8 py-3 rounded-lg font-bold transition-colors ${
+              nextLesson && isSameWorld
+                ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                : 'bg-primary text-slate-900 text-lg hover:bg-primary-dark'
+            }`}
+          >
+            {lesson.type === 'boss' ? 'View Map 🗺️' : 'Back to Map'}
+          </button>
+        </div>
       </div>
     </div>
   );
