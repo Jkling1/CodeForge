@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CodeEditor from '../editor/CodeEditor';
 import HTMLPreview from '../editor/HTMLPreview';
 import Terminal from '../editor/Terminal';
 import HintSystem from './HintSystem';
 import { executeCode, validateOutput, validateHTML } from '../../utils/sandbox';
 
-export default function DebugMission({ lesson, onComplete, onWrong, hintsUsed, onUseHint }) {
+export default function DebugMission({ lesson, onComplete, onWrong, hintsUsed, onUseHint, onCodeChange }) {
   const [code, setCode] = useState(lesson.starterCode || '');
+
+  useEffect(() => { onCodeChange?.(code); }, [code, onCodeChange]);
   const [output, setOutput] = useState(null);
   const [solved, setSolved] = useState(false);
   const isHTML = lesson.validation?.type === 'html' || lesson.language === 'html' || lesson.language === 'css';
