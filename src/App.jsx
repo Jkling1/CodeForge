@@ -1,4 +1,5 @@
 import { GameProvider, useGame } from './contexts/GameContext';
+import { useSoundEffects } from './hooks/useSoundEffects';
 import Layout from './components/layout/Layout';
 import OnboardingScreen from './screens/OnboardingScreen';
 import MapScreen from './screens/MapScreen';
@@ -13,6 +14,7 @@ import XPPopup from './components/ui/XPPopup';
 function AppContent() {
   const { state } = useGame();
   const { screen } = state.ui;
+  useSoundEffects(state);
 
   if (!state.user.onboarded) {
     return <OnboardingScreen />;

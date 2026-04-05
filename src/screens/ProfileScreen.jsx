@@ -123,6 +123,32 @@ export default function ProfileScreen() {
           </button>
         </div>
 
+        {/* AI Tutor API Key */}
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-sm text-slate-300">AI Tutor (Claude API Key)</span>
+            {user.settings.claudeApiKey && <span className="text-xs text-success">✓ Connected</span>}
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={user.settings.claudeApiKey || ''}
+              onChange={e => dispatch({ type: 'UPDATE_SETTINGS', settings: { claudeApiKey: e.target.value } })}
+              placeholder="sk-ant-..."
+              className="flex-1 bg-slate-700 text-slate-100 rounded-lg px-3 py-1.5 text-sm outline-none border border-slate-600 focus:border-primary placeholder-slate-500 font-mono"
+            />
+            {user.settings.claudeApiKey && (
+              <button
+                onClick={() => dispatch({ type: 'UPDATE_SETTINGS', settings: { claudeApiKey: '' } })}
+                className="px-3 py-1.5 bg-slate-700 text-danger rounded-lg text-xs hover:bg-slate-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-slate-500 mt-1">Optional. Enables AI-powered tutoring in lessons. Key stored locally only.</p>
+        </div>
+
         <button
           onClick={() => exportState()}
           className="w-full py-2 bg-slate-700 text-slate-300 rounded-lg text-sm hover:bg-slate-600 transition-colors"
